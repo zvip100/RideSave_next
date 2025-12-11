@@ -2,6 +2,8 @@ import Link from "next/link";
 import { tripsService } from "@/lib/services";
 import NewTripButton from "@/components/NewTripButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function Trips() {
   // TODO: Remove this delay - just for testing loading state
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -15,7 +17,7 @@ export default async function Trips() {
     });
   };
 
-  const formatTime = (date) => { 
+  const formatTime = (date) => {
     return new Date(date).toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "2-digit",
