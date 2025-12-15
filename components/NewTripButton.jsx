@@ -1,13 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { Sheet } from "@/components/ui";
+import { useRouter } from "next/navigation";
+import { Sheet, Toast } from "@/components/ui";
+import TripForm from "@/components/forms/TripForm";
 
 export default function NewTripButton() {
   const [isOpen, setIsOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState(null);
+  const router = useRouter();
+
+  const handleSuccess = (data) => {
+    setIsOpen(false);
+    setToastMessage("Trip created successfully");
+
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 3000);
+
+    // Refresh the page to show the new trip
+    router.refresh();
+  };
 
   return (
     <>
+      {toastMessage && <Toast message={toastMessage} />}
+
       <button
         onClick={() => setIsOpen(true)}
         className="inline-flex items-center gap-2 py-2.5 px-5 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary-hover transition-colors"
@@ -30,18 +48,7 @@ export default function NewTripButton() {
         description="Fill in the trip details below"
         width="lg"
       >
-        {/* TODO: Add trip form here */}
-        <div className="space-y-4">
-          <p className="text-muted-foreground text-sm">
-            Trip form coming soon...
-          </p>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="w-full bg-primary text-primary-foreground text-lg font-medium rounded-lg hover:bg-primary-hover transition-colors py-2 px-4"
-          >
-            Save Trip
-          </button>
-        </div>
+        <TripForm onSuccess={handleSuccess} onCancel={() => setIsOpen(false)} />
       </Sheet>
     </>
   );

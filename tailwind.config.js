@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ["class"],
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -40,9 +41,15 @@ export default {
         'fade-in-delay-1': 'fadeInUp 0.6s ease-out 0.1s forwards',
         'fade-in-delay-2': 'fadeInUp 0.6s ease-out 0.2s forwards',
         'fade-in-delay-3': 'fadeInUp 0.6s ease-out 0.3s forwards',
+        'fade-in-delay-4': 'fadeInUp 0.6s ease-out 0.4s forwards',
         'shimmer': 'shimmer 2s ease-in-out infinite',
         'slide-in-right': 'slideInRight 0.3s ease-out forwards',
         'slide-out-right': 'slideOutRight 0.2s ease-in forwards',
+        'reverse': 'spin 1s linear infinite reverse',
+      },
+      animationDelay: {
+        '100': '100ms',
+        '200': '200ms',
       },
       keyframes: {
         fadeInUp: {
@@ -65,6 +72,6 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };
 

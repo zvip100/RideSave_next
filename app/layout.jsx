@@ -1,8 +1,9 @@
-import './globals.css';
+import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 export const metadata = {
-  title: 'RideSave - Trip Management',
-  description: 'Manage your trips efficiently with RideSave',
+  title: "RideSave - Save Your Trips",
+  description: "Manage your trips efficiently with RideSave",
 };
 
 export default function RootLayout({ children }) {
@@ -10,10 +11,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <div className="gradient-bg" />
+        <Navbar />
         {children}
       </body>
     </html>
   );
 }
-
-
