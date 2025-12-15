@@ -172,10 +172,15 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
       // Check if the new date-time is in the future
       const estNow = getESTDate();
       if (newDate > estNow) {
-        // Reset to current time
+        // Reset to current time on the selected date
+        const currentDateTime = new Date(selectedDate);
+        currentDateTime.setHours(estNow.getHours(), estNow.getMinutes());
+
         const currentTime = estNow.toTimeString().slice(0, 5);
+        const isoString = currentDateTime.toISOString().slice(0, 16);
+
         setTime(currentTime);
-        onChange?.(currentTime);
+        onChange?.(isoString);
         return;
       }
 
