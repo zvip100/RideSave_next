@@ -12,7 +12,9 @@ import { tripsService } from '@/lib/services';
  */
 export async function POST(request) {
   try {
-    const data = await request.json();
+    // Check if request has a body
+    const body = await request.text();
+    const data = body ? JSON.parse(body) : {};
     const { startDate, endDate } = data;
     const userName = 'Zvi Podrigal'; // TODO: get user name from database
     const unitNumber = '144'; // TODO: get unit number from database

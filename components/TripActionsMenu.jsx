@@ -1,20 +1,28 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { Toast } from "@/components/ui";
+import TestForm from "@/components/forms/testForm";
+import { Sheet } from "@/components/ui";
+import { ConfirmDialog } from "@/components/ui";
+import { updateTrip, deleteTrip } from "@/lib/actions/trips";
 
 export default function TripActionsMenu({
   tripId,
+  fieldValues,
   onEdit,
   onDelete,
   externalIsOpen,
   onOpenChange,
 }) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const [action, setAction] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
+  const router = useRouter();
 
   // Determine if modal should be open
   // Priority: external control > internal control
@@ -50,23 +58,13 @@ export default function TripActionsMenu({
   }, [isOpen, externalIsOpen, onOpenChange]);
 
   const handleEdit = () => {
-    setToastMessage("Edit action triggered!");
     closeModal();
-    // Simulate action feedback
-    setTimeout(() => {
-      setToastMessage(null);
-      onEdit?.(tripId);
-    }, 1000);
+    setAction("edit");
   };
 
   const handleDelete = () => {
-    setToastMessage("Delete action triggered!");
     closeModal();
-    // Simulate action feedback
-    setTimeout(() => {
-      setToastMessage(null);
-      onDelete?.(tripId);
-    }, 1000);
+    setAction("delete");
   };
 
   const toggleMenu = () => {
@@ -79,43 +77,97 @@ export default function TripActionsMenu({
     }
   };
 
+  const handleDeleteConfirm = async () => {
+    setAction(null);
+
+    const result = await deleteTrip(tripId);
+
+    if (result?.success) {
+      setToastMessage("Trip deleted successfully");
+      setTimeout(() => {
+        router.refresh();
+      }, 2000);
+    } else {
+      setToastMessage("Failed to delete trip");
+    }
+  };
+
   return (
-    <div className="relative">
-      {/* Action Button */}
-      <button
-        ref={buttonRef}
-        onClick={toggleMenu}
-        className="group p-2 rounded-lg hover:bg-secondary transition-colors opacity-0 group-hover:opacity-100"
-        aria-label="Trip actions"
-      >
-        <MoreHorizontal className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-      </button>
-
-      {/* Dropdown Menu */}
-      {isOpen && (
-        <div
-          ref={menuRef}
-          className="absolute right-0 top-full mt-1 z-50 min-w-[140px] bg-card border border-border rounded-lg shadow-lg py-1 animate-in slide-in-from-top-1 fade-in duration-150"
+    <>
+      <div className="relative">
+        {/* Action Button */}
+        <button
+          ref={buttonRef}
+          onClick={toggleMenu}
+          className="group p-2 rounded-lg hover:bg-secondary transition-colors opacity-0 group-hover:opacity-100"
+          aria-label="Trip actions"
         >
-          <button
-            onClick={handleEdit}
-            className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex items-center gap-2 text-foreground"
-          >
-            <Edit className="w-4 h-4" />
-            Edit Trip
-          </button>
-          <button
-            onClick={handleDelete}
-            className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex items-center gap-2 text-destructive"
-          >
-            <Trash2 className="w-4 h-4" />
-            Delete Trip
-          </button>
-        </div>
-      )}
+          <MoreHorizontal className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+        </button>
 
-      {/* Toast Notification */}
-      {toastMessage && <Toast message={toastMessage} />}
-    </div>
+        {/* Dropdown Menu */}
+        {isOpen && (
+          <div
+            ref={menuRef}
+            className="absolute right-0 top-full mt-1 z-50 min-w-[140px] bg-card border border-border rounded-lg shadow-lg py-1 animate-in slide-in-from-top-1 fade-in duration-150"
+          >
+            <button
+              onClick={handleEdit}
+              className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex items-center gap-2 text-foreground"
+            >
+              <Edit className="w-4 h-4" />
+              Edit Trip
+            </button>
+            <button
+              onClick={handleDelete}
+              className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex items-center gap-2 text-destructive"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete Trip
+            </button>
+          </div>
+        )}
+
+        {/* Edit Sheet */}
+        {action === "edit" && (
+          <Sheet
+            open={action === "edit"}
+            onClose={() => setAction(null)}
+            title="Edit Trip"
+            description="Edit the trip details below"
+            width="lg"
+          >
+            <TestForm
+              fieldValues={fieldValues}
+              serverAction={updateTrip}
+              onSuccess={(data) => {
+                setAction(null);
+                // Refresh the page to show the updated trip
+                router.refresh();
+              }}
+              onCancel={() => setAction(null)}
+              tripId={tripId}
+            />
+          </Sheet>
+        )}
+
+        {/* Confirm Dialog */}
+        {action === "delete" && (
+          <ConfirmDialog
+            open={true}
+            onClose={() => setAction(null)}
+            question="Are you sure you want to delete this trip?"
+            description="This action cannot be undone."
+            confirmText="Delete"
+            cancelText="Cancel"
+            onConfirm={handleDeleteConfirm}
+            onCancel={() => setAction(null)}
+          />
+        )}
+
+        {/* Toast Notification */}
+        {toastMessage && <Toast message={toastMessage} />}
+      </div>
+    </>
   );
 }

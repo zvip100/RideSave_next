@@ -213,7 +213,7 @@ export default function TripsTable({ trips }) {
                       )}
                       {trip.waitingPrice && (
                         <span className="text-secondary-foreground">
-                          Wait:{" "}
+                          Waiting:{" "}
                           <span className="font-semibold text-foreground">
                             {formatPrice(trip.waitingPrice)}
                           </span>
@@ -242,6 +242,7 @@ export default function TripsTable({ trips }) {
                   <td className="px-6 py-4">
                     <TripActionsMenu
                       tripId={trip.id}
+                      fieldValues={trip}
                       onEdit={(id) => console.log("Edit trip:", id)}
                       onDelete={(id) => console.log("Delete trip:", id)}
                       externalIsOpen={openModalTripId === trip.id}

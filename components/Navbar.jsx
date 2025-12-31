@@ -32,14 +32,10 @@ export default function Navbar() {
             Trips
           </Link>
           <Link
-            href="/api"
-            className={`py-2 px-4 text-sm rounded-xl transition-all ${
-              pathname === "/api"
-                ? "bg-primary text-primary-foreground border border-primary"
-                : "bg-secondary text-foreground border border-border hover:bg-muted hover:border-muted-foreground"
-            }`}
+            href="/login"
+            className="text-secondary-foreground hover:text-foreground transition-colors"
           >
-            API Docs
+            Login
           </Link>
         </nav>
       </div>

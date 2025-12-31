@@ -22,6 +22,16 @@ const MONTHS = [
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+// Format date in EST timezone as YYYY-MM-DDTHH:mm
+const formatESTDateTime = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 export function DateTimePicker({ value, onChange, className, ...props }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -122,17 +132,17 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
       // If future, set to current EST time
       setSelectedDate(estNow);
       setTime(estNow.toTimeString().slice(0, 5));
-      const isoString = estNow.toISOString().slice(0, 16);
-      onChange?.(isoString);
+      const estString = formatESTDateTime(estNow);
+      onChange?.(estString);
       return;
     }
 
     setSelectedDate(newDate);
 
-    // Only set the ISO string if we have a valid time
+    // Only set the EST string if we have a valid time
     if (time) {
-      const isoString = newDate.toISOString().slice(0, 16);
-      onChange?.(isoString);
+      const estString = formatESTDateTime(newDate);
+      onChange?.(estString);
     }
   };
 
@@ -151,8 +161,8 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
         return;
       }
 
-      const isoString = newDate.toISOString().slice(0, 16);
-      onChange?.(isoString);
+      const estString = formatESTDateTime(newDate);
+      onChange?.(estString);
     }
   };
 
@@ -177,15 +187,15 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
         currentDateTime.setHours(estNow.getHours(), estNow.getMinutes());
 
         const currentTime = estNow.toTimeString().slice(0, 5);
-        const isoString = currentDateTime.toISOString().slice(0, 16);
+        const estString = formatESTDateTime(currentDateTime);
 
         setTime(currentTime);
-        onChange?.(isoString);
+        onChange?.(estString);
         return;
       }
 
-      const isoString = newDate.toISOString().slice(0, 16);
-      onChange?.(isoString);
+      const estString = formatESTDateTime(newDate);
+      onChange?.(estString);
     }
   };
 
@@ -484,8 +494,8 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
                   setSelectedDate(estNow);
                   setViewDate(estNow);
                   setTime(estNow.toTimeString().slice(0, 5));
-                  const isoString = estNow.toISOString().slice(0, 16);
-                  onChange?.(isoString);
+                  const estString = formatESTDateTime(estNow);
+                  onChange?.(estString);
                   setShowTimePicker(false);
                 }}
                 className="flex-1 h-8 text-xs rounded-md border border-border hover:bg-secondary transition-colors"

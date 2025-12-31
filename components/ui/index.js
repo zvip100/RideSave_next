@@ -1,4 +1,5 @@
 export { default as Sheet } from './Sheet';
+export { default as ConfirmDialog } from './confirm-dialog';
 export { Input } from './input';
 export { Label } from './label';
 export { Select } from './select';

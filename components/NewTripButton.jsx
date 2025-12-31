@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Sheet, Toast } from "@/components/ui";
 import TripForm from "@/components/forms/TripForm";
+import TestForm from "@/components/forms/testForm";
+import { createTrip } from "@/lib/actions/trips";
 
 export default function NewTripButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,11 +14,13 @@ export default function NewTripButton() {
 
   const handleSuccess = (data) => {
     setIsOpen(false);
-    setToastMessage("Trip created successfully");
+    //setToastMessage("Trip created successfully");
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       setToastMessage(null);
-    }, 3000);
+      // Refresh the page to show the new trip
+      router.refresh();
+    }, 3000);*/
 
     // Refresh the page to show the new trip
     router.refresh();
@@ -48,7 +52,12 @@ export default function NewTripButton() {
         description="Fill in the trip details below"
         width="lg"
       >
-        <TripForm onSuccess={handleSuccess} onCancel={() => setIsOpen(false)} />
+        {/* <TripForm onSuccess={handleSuccess} onCancel={() => setIsOpen(false)} /> */}
+        <TestForm
+          serverAction={createTrip}
+          onSuccess={handleSuccess}
+          onCancel={() => setIsOpen(false)}
+        />
       </Sheet>
     </>
   );
