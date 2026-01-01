@@ -3,26 +3,24 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
-import { Toast } from "@/components/ui";
-import TestForm from "@/components/forms/testForm";
+import TripForm from "@/components/forms/TripForm";
 import { Sheet } from "@/components/ui";
 import { ConfirmDialog } from "@/components/ui";
 import { updateTrip, deleteTrip } from "@/lib/actions/trips";
+import useToastStore from "@/store/toastStore";
 
-export default function TripActionsMenu({
+export default function TripActions({
   tripId,
   fieldValues,
-  onEdit,
-  onDelete,
   externalIsOpen,
   onOpenChange,
 }) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [action, setAction] = useState(null);
-  const [toastMessage, setToastMessage] = useState(null);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const router = useRouter();
+  const { success, error } = useToastStore();
 
   // Determine if modal should be open
   // Priority: external control > internal control
@@ -57,16 +55,6 @@ export default function TripActionsMenu({
     }
   }, [isOpen, externalIsOpen, onOpenChange]);
 
-  const handleEdit = () => {
-    closeModal();
-    setAction("edit");
-  };
-
-  const handleDelete = () => {
-    closeModal();
-    setAction("delete");
-  };
-
   const toggleMenu = () => {
     if (isOpen) {
       // Modal is open, close it
@@ -77,18 +65,37 @@ export default function TripActionsMenu({
     }
   };
 
+  const handleEditClick = () => {
+    closeModal();
+    setAction("edit");
+  };
+
+  const handleDeleteClick = () => {
+    closeModal();
+    setAction("delete");
+  };
+
+  const handleEditSuccess = () => {
+    setAction(null);
+    success("Trip updated successfully");
+    router.refresh();
+  };
+
+  const handleEditError = (e) => {
+    console.error(e);
+    error("Failed to update trip");
+  };
+
   const handleDeleteConfirm = async () => {
     setAction(null);
 
     const result = await deleteTrip(tripId);
 
     if (result?.success) {
-      setToastMessage("Trip deleted successfully");
-      setTimeout(() => {
-        router.refresh();
-      }, 2000);
+      success("Trip deleted successfully");
+      router.refresh();
     } else {
-      setToastMessage("Failed to delete trip");
+      error("Failed to delete trip");
     }
   };
 
@@ -112,14 +119,14 @@ export default function TripActionsMenu({
             className="absolute right-0 top-full mt-1 z-50 min-w-[140px] bg-card border border-border rounded-lg shadow-lg py-1 animate-in slide-in-from-top-1 fade-in duration-150"
           >
             <button
-              onClick={handleEdit}
+              onClick={handleEditClick}
               className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex items-center gap-2 text-foreground"
             >
               <Edit className="w-4 h-4" />
               Edit Trip
             </button>
             <button
-              onClick={handleDelete}
+              onClick={handleDeleteClick}
               className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex items-center gap-2 text-destructive"
             >
               <Trash2 className="w-4 h-4" />
@@ -137,14 +144,11 @@ export default function TripActionsMenu({
             description="Edit the trip details below"
             width="lg"
           >
-            <TestForm
+            <TripForm
               fieldValues={fieldValues}
               serverAction={updateTrip}
-              onSuccess={(data) => {
-                setAction(null);
-                // Refresh the page to show the updated trip
-                router.refresh();
-              }}
+              onSuccess={handleEditSuccess}
+              onError={handleEditError}
               onCancel={() => setAction(null)}
               tripId={tripId}
             />
@@ -164,9 +168,6 @@ export default function TripActionsMenu({
             onCancel={() => setAction(null)}
           />
         )}
-
-        {/* Toast Notification */}
-        {toastMessage && <Toast message={toastMessage} />}
       </div>
     </>
   );

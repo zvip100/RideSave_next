@@ -1,8 +1,14 @@
 import { tripsService } from "@/lib/services";
-import NewTripButton from "@/components/NewTripButton";
+import NewTrip from "@/components/NewTrip";
 import TripsTable from "@/components/TripsTable";
+import RefreshTrips from "@/components/refreshTrips";
 
 export const dynamic = "force-dynamic";
+
+export const metadata = {
+  title: "Trips - RideSave",
+  description: "Manage your trips efficiently with RideSave",
+};
 
 export default async function Trips() {
   const trips = await tripsService.getTrips();
@@ -21,7 +27,10 @@ export default async function Trips() {
               {trips.length} total trips
             </p>
           </div>
-          <NewTripButton />
+          <div className="flex gap-8">
+            <RefreshTrips />
+            <NewTrip />
+          </div>
         </div>
 
         {/* Table */}

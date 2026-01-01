@@ -1,5 +1,6 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import ToastWrapper from "@/components/toastWrapper";
 
 export const metadata = {
   title: "RideSave - Save Your Trips",
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
       <body>
         <div className="gradient-bg" />
         <Navbar />
+        <ToastWrapper />
         {children}
       </body>
     </html>

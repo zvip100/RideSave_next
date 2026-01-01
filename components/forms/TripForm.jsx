@@ -2,16 +2,27 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { DateTimePicker } from "@/components/ui/date-time-picker";
-import { useCreateTrip } from "@/hooks/useCreateTrip";
+import {
+  Input,
+  Label,
+  Select,
+  Textarea,
+  Checkbox,
+  Button,
+  DateTimePicker,
+} from "@/components/ui";
+import SubmitButton from "@/components/SubmitButton";
+import { useAsyncSubmit } from "@/hooks/useAsyncSubmit";
 
-export default function TripForm({ onSuccess, onCancel, userId = 3 }) {
+export default function TripForm({
+  fieldValues = null,
+  serverAction,
+  onSuccess,
+  onError,
+  onCancel,
+  userId = 3,
+  tripId = null,
+}) {
   const {
     register,
     handleSubmit,
@@ -20,19 +31,44 @@ export default function TripForm({ onSuccess, onCancel, userId = 3 }) {
     setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: {
+    defaultValues: fieldValues || {
       type: "Medicaid",
       clockOnly: false,
       time: "", // No default time
     },
   });
 
-  const { createTrip, isLoading, error: apiError } = useCreateTrip();
-  const [showStops, setShowStops] = useState(false);
-  const [showWaiting, setShowWaiting] = useState(false);
+  const {
+    submit: submitTrip,
+    isLoading,
+    error,
+  } = useAsyncSubmit(serverAction, onSuccess, onError);
+
+  const [showStops, setShowStops] = useState(
+    Boolean(fieldValues?.stopsPaymentMethod || fieldValues?.stopsPrice)
+  );
+  const [showWaiting, setShowWaiting] = useState(
+    Boolean(fieldValues?.waitingPaymentMethod || fieldValues?.waitingPrice)
+  );
 
   const watchClockOnly = watch("clockOnly");
   const watchType = watch("type");
+
+  useEffect(() => {
+    if (!tripId) return;
+
+    const convertCentsToDollars = (fieldName, cents) => {
+      setValue(fieldName, `$${(cents / 100).toFixed(2)}`);
+    };
+
+    if (fieldValues?.stopsPrice) {
+      convertCentsToDollars("stopsPrice", fieldValues.stopsPrice);
+    }
+
+    if (fieldValues?.waitingPrice) {
+      convertCentsToDollars("waitingPrice", fieldValues.waitingPrice);
+    }
+  }, []);
 
   // When clock only is checked, set type to Medicaid and clear payment method
   useEffect(() => {
@@ -79,11 +115,7 @@ export default function TripForm({ onSuccess, onCancel, userId = 3 }) {
       notes: data.notes || "",
     };
 
-    const result = await createTrip(formattedData);
-
-    if (result.success) {
-      onSuccess?.(result.data);
-    }
+    await submitTrip(formattedData);
   };
 
   return (
@@ -196,7 +228,7 @@ export default function TripForm({ onSuccess, onCancel, userId = 3 }) {
               }}
               className="flex-1"
             >
-              {showStops ? "✓ Stops Added" : "+ Add Stops"}
+              {showStops ? "Remove Stops" : "+ Add Stops"}
             </Button>
             <Button
               type="button"
@@ -211,7 +243,7 @@ export default function TripForm({ onSuccess, onCancel, userId = 3 }) {
               }}
               className="flex-1"
             >
-              {showWaiting ? "✓ Waiting Added" : "+ Add Waiting"}
+              {showWaiting ? "Remove Waiting" : "+ Add Waiting"}
             </Button>
           </div>
 
@@ -237,6 +269,7 @@ export default function TripForm({ onSuccess, onCancel, userId = 3 }) {
                 </svg>
                 <span className="text-sm font-medium">Stops Charge</span>
               </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="stopsPrice" className="text-xs">
@@ -302,6 +335,7 @@ export default function TripForm({ onSuccess, onCancel, userId = 3 }) {
                 </svg>
                 <span className="text-sm font-medium">Waiting Time Charge</span>
               </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="waitingPrice" className="text-xs">
@@ -361,18 +395,19 @@ export default function TripForm({ onSuccess, onCancel, userId = 3 }) {
         )}
       </div>
 
-      {/* API Error */}
-      {apiError && (
+      {error && (
         <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-500 border border-red-500/20">
-          {apiError}
+          {error}
         </div>
       )}
 
       {/* Form Actions */}
       <div className="flex gap-3 pt-4">
-        <Button type="submit" disabled={isLoading} className="flex-1">
-          {isLoading ? "Creating..." : "Create Trip"}
-        </Button>
+        <SubmitButton
+          text={tripId ? "Update Trip" : "Create Trip"}
+          pendingText={tripId ? "Updating..." : "Creating..."}
+          pending={isLoading}
+        />
         {onCancel && (
           <Button
             type="button"

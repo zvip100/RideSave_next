@@ -14,17 +14,16 @@ export function useAsyncSubmit(submitFn, onSuccess, onError) {
       const result = await submitFn(...args);
 
       if (result && typeof result === 'object' && result.success === false) {
-        setError(result.error);
-        onError?.(new Error(result.error));
-        return result;
+        setError(result?.error);
+        onError?.(result?.error);
+        return result?.error;
       }
 
-      onSuccess?.(result);
-      return result;
+      onSuccess?.(result?.data);
+      return result?.data;
     } catch (err) {
-      setError(err.message);
-      onError?.(err);
-      throw err;
+      setError(err?.message || "An unknown error occurred");
+      onError?.(err?.message || "An unknown error occurred");
     } finally {
       setIsLoading(false);
     }

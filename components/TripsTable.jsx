@@ -9,7 +9,7 @@ import {
   Circle,
   MapPin,
 } from "lucide-react";
-import TripActionsMenu from "./TripActionsMenu";
+import TripActions from "./TripActions";
 
 export default function TripsTable({ trips }) {
   const [openModalTripId, setOpenModalTripId] = useState(null);
@@ -240,11 +240,9 @@ export default function TripsTable({ trips }) {
 
                   {/* Actions */}
                   <td className="px-6 py-4">
-                    <TripActionsMenu
+                    <TripActions
                       tripId={trip.id}
                       fieldValues={trip}
-                      onEdit={(id) => console.log("Edit trip:", id)}
-                      onDelete={(id) => console.log("Delete trip:", id)}
                       externalIsOpen={openModalTripId === trip.id}
                       onOpenChange={handleModalClose}
                     />

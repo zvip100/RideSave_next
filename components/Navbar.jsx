@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import SendWeeklyEmail from "@/components/sendWeeklyEmail";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -37,6 +38,7 @@ export default function Navbar() {
           >
             Login
           </Link>
+          <SendWeeklyEmail />
         </nav>
       </div>
     </header>
