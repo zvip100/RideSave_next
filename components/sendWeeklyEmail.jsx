@@ -7,13 +7,13 @@ import { sendWeeklyReport } from "@/lib/actions/email";
 import useToastStore from "@/store/toastStore";
 import { cn } from "@/lib/utils";
 
-export default function SendWeeklyEmail() {
+export default function SendWeeklyEmail({ user: { name, unit } }) {
   const [isLoading, setIsLoading] = useState(false);
   const { success, error } = useToastStore();
 
   const handleClick = async () => {
     setIsLoading(true);
-    const result = await sendWeeklyReport();
+    const result = await sendWeeklyReport(name, unit);
     setIsLoading(false);
 
     if (result.success) {

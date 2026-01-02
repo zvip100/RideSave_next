@@ -42,7 +42,7 @@ export default function TripsTable({ trips }) {
   };
 
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden">
+    <div className="card overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -75,7 +75,7 @@ export default function TripsTable({ trips }) {
                   <div className="text-muted-foreground">
                     <p className="text-lg mb-2">No trips yet</p>
                     <p className="text-sm">
-                      Create your first trip to get started
+                      Add your first trip to get started
                     </p>
                   </div>
                 </td>

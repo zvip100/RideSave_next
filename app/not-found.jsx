@@ -3,10 +3,10 @@ import { SearchX } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center text-center py-24 px-6 max-w-[600px] mx-auto">
+    <main className="page-center py-24 max-w-[600px] mx-auto">
       {/* 404 Icon/Visual */}
       <div className="mb-8">
-        <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-6">
+        <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex-center mb-6">
           <SearchX className="w-12 h-12 text-primary" />
         </div>
       </div>
@@ -23,10 +23,10 @@ export default function NotFound() {
       </p>
 
       {/* Actions */}
-      <div className="flex gap-4 flex-wrap justify-center opacity-0 animate-fade-in-delay-3">
+      <div className="flex-center gap-4 flex-wrap opacity-0 animate-fade-in-delay-3">
         <Link
           href="/"
-          className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-primary text-primary-foreground font-medium rounded-xl hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(59,130,246,0.4)] transition-all"
+          className="flex-center gap-2 py-3 px-6 bg-primary text-primary-foreground font-medium rounded-xl hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(59,130,246,0.4)] transition-all"
         >
           Go Home
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -41,7 +41,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/trips"
-          className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-secondary text-foreground border border-border font-medium rounded-xl hover:bg-muted hover:border-muted-foreground transition-all"
+          className="flex-center gap-2 py-3 px-6 bg-secondary text-foreground border border-border font-medium rounded-xl hover:bg-muted hover:border-muted-foreground transition-all"
         >
           View Trips
         </Link>

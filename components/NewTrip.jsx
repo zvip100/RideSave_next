@@ -29,7 +29,7 @@ export default function NewTrip() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-2 py-2.5 px-5 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary-hover transition-colors"
+        className="flex-row gap-2 py-2.5 px-5 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary-hover transition-colors"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path

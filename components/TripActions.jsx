@@ -116,18 +116,18 @@ export default function TripActions({
         {isOpen && (
           <div
             ref={menuRef}
-            className="absolute right-0 top-full mt-1 z-50 min-w-[140px] bg-card border border-border rounded-lg shadow-lg py-1 animate-in slide-in-from-top-1 fade-in duration-150"
+            className="absolute right-0 top-full mt-1 z-50 min-w-[140px] card rounded-lg shadow-lg py-1 animate-in slide-in-from-top-1 fade-in duration-150"
           >
             <button
               onClick={handleEditClick}
-              className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex items-center gap-2 text-foreground"
+              className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex-row gap-2 text-foreground"
             >
               <Edit className="w-4 h-4" />
               Edit Trip
             </button>
             <button
               onClick={handleDeleteClick}
-              className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex items-center gap-2 text-destructive"
+              className="w-full px-3 py-2 text-left text-sm hover:bg-secondary/50 transition-colors flex-row gap-2 text-destructive"
             >
               <Trash2 className="w-4 h-4" />
               Delete Trip

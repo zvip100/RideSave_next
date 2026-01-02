@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-safe flex flex-col">
       {/* Hero Section */}
-      <section className="flex-1 flex flex-col justify-center items-center text-center py-24 px-6 max-w-[1400px] mx-auto min-h-[calc(100vh-100px)] max-h-[900px]">
+      <section className="flex-1 flex flex-col justify-center items-center text-center py-24 px-6 container-main min-h-[calc(100vh-100px)] max-h-[900px]">
         {/* Heading */}
         <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] font-bold tracking-tight leading-tight mb-6 max-w-[800px] opacity-0 animate-fade-in-delay-1">
           Track Your Trips,
@@ -19,10 +19,10 @@ export default function Home() {
         </p>
 
         {/* CTAs */}
-        <div className="flex gap-4 flex-wrap justify-center opacity-0 animate-fade-in-delay-3">
+        <div className="flex-center gap-4 flex-wrap opacity-0 animate-fade-in-delay-3">
           <Link
             href="/trips"
-            className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-primary text-primary-foreground font-medium rounded-xl hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(59,130,246,0.4)] transition-all"
+            className="flex-center gap-2 py-3 px-6 bg-primary text-primary-foreground font-medium rounded-xl hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(59,130,246,0.4)] transition-all"
           >
             View Trips
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -37,7 +37,7 @@ export default function Home() {
           </Link>
           <Link
             href="/api"
-            className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-secondary text-foreground border border-border font-medium rounded-xl hover:bg-muted hover:border-muted-foreground transition-all"
+            className="flex-center gap-2 py-3 px-6 bg-secondary text-foreground border border-border font-medium rounded-xl hover:bg-muted hover:border-muted-foreground transition-all"
           >
             API Documentation
           </Link>
@@ -49,8 +49,8 @@ export default function Home() {
         <div className="w-full max-w-[1200px] mx-auto px-6">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
             {/* Feature 1 */}
-            <div className="bg-card border border-border rounded-xl p-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-4 text-2xl">
+            <div className="card p-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex-center mb-4 text-2xl">
                 📱
               </div>
               <h3 className="text-lg font-semibold mb-2">SMS Integration</h3>
@@ -60,8 +60,8 @@ export default function Home() {
             </div>
 
             {/* Feature 2 */}
-            <div className="bg-card border border-border rounded-xl p-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center mb-4 text-2xl">
+            <div className="card p-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent/20 to-accent/5 flex-center mb-4 text-2xl">
                 📊
               </div>
               <h3 className="text-lg font-semibold mb-2">Weekly Reports</h3>
@@ -71,8 +71,8 @@ export default function Home() {
             </div>
 
             {/* Feature 3 */}
-            <div className="bg-card border border-border rounded-xl p-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex items-center justify-center mb-4 text-2xl">
+            <div className="card p-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex-center mb-4 text-2xl">
                 ⚡
               </div>
               <h3 className="text-lg font-semibold mb-2">Fast API</h3>

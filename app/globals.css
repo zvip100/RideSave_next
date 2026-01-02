@@ -34,16 +34,41 @@
   }
 
   body {
-    @apply bg-background text-foreground min-h-screen font-sans;
+    @apply bg-background text-foreground min-h-safe font-sans;
   }
 
   a {
     @apply text-inherit no-underline;
   }
+
 }
 
 /* Components layer - only for truly reusable patterns */
 @layer components {
+
+  /* Flex utilities */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-row {
+    @apply flex items-center;
+  }
+
+  /* Card base */
+  .card {
+    @apply bg-card border border-border rounded-xl;
+  }
+
+  /* Main container */
+  .container-main {
+    @apply w-full max-w-[1400px] mx-auto px-6;
+  }
+
+  /* Centered page layout */
+  .page-center {
+    @apply min-h-safe flex flex-col justify-center items-center text-center px-6;
+  }
 
   /* Gradient background effect */
   .gradient-bg {
@@ -52,6 +77,11 @@
       radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.15), transparent),
       radial-gradient(ellipse 60% 40% at 100% 100%, rgba(251, 191, 36, 0.08), transparent),
       #0a0a0c;
+  }
+
+  .min-h-safe {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   /* Modern Apple-style scrollbar - Global */
@@ -124,5 +154,15 @@
 
   *::-webkit-scrollbar-thumb:active {
     background: rgba(59, 130, 246, 0.6);
+  }
+}
+
+/* Mobile input zoom prevention */
+@media screen and (max-width: 768px) {
+
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }

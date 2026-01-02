@@ -253,7 +253,7 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
             isSelected && "bg-primary text-primary-foreground hover:bg-primary",
             !isSelected && isToday && "border border-primary",
             isFuture && "opacity-30 cursor-not-allowed",
-            "flex items-center justify-center"
+            "flex-center"
           )}
         >
           {day}
@@ -276,7 +276,7 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
           !time ? "text-muted-foreground" : "text-foreground"
         )}
       >
-        <span className="flex items-center gap-2">
+        <span className="flex-row gap-2">
           <svg
             width="16"
             height="16"
@@ -318,7 +318,7 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
               <button
                 type="button"
                 onClick={previousMonth}
-                className="h-8 w-8 rounded-md hover:bg-secondary flex items-center justify-center"
+                className="h-8 w-8 rounded-md hover:bg-secondary flex-center"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path
@@ -336,7 +336,7 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
               <button
                 type="button"
                 onClick={nextMonth}
-                className="h-8 w-8 rounded-md hover:bg-secondary flex items-center justify-center"
+                className="h-8 w-8 rounded-md hover:bg-secondary flex-center"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path
@@ -355,7 +355,7 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
               {DAYS.map((day) => (
                 <div
                   key={day}
-                  className="h-9 flex items-center justify-center text-xs text-muted-foreground font-medium"
+                  className="h-9 flex-center text-xs text-muted-foreground font-medium"
                 >
                   {day}
                 </div>

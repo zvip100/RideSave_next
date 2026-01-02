@@ -65,7 +65,7 @@ export default function ConfirmDialog({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex-center">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/30 backdrop-blur-sm"
@@ -74,7 +74,7 @@ export default function ConfirmDialog({
       />
 
       {/* Dialog */}
-      <div className="relative bg-card border border-border rounded-lg shadow-xl shadow-black/50 max-w-sm w-full mx-4">
+      <div className="relative card rounded-lg shadow-xl shadow-black/50 max-w-sm w-full mx-4">
         {/* Content */}
         <div className="p-6">
           {/* Question */}

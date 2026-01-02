@@ -250,7 +250,7 @@ export default function TripForm({
           {/* Stops Inputs */}
           {showStops && (
             <div className="space-y-3 p-4 bg-secondary/30 rounded-lg border border-border">
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex-row gap-2 mb-2">
                 <svg
                   width="16"
                   height="16"
@@ -311,7 +311,7 @@ export default function TripForm({
           {/* Waiting Inputs */}
           {showWaiting && (
             <div className="space-y-3 p-4 bg-secondary/30 rounded-lg border border-border">
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex-row gap-2 mb-2">
                 <svg
                   width="16"
                   height="16"

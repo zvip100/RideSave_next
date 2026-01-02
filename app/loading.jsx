@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center text-center py-24 px-6 max-w-[600px] mx-auto">
+    <main className="page-center py-24 max-w-[600px] mx-auto">
       {/* Loading Icon/Visual */}
       <div className="mb-8">
         <div className="relative">
@@ -11,7 +11,7 @@ export default function Loading() {
           <div className="absolute inset-2 rounded-full border-2 border-accent/30 border-t-accent animate-reverse"></div>
 
           {/* Center dot */}
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex-center">
             <div className="w-3 h-3 rounded-full bg-primary animate-pulse"></div>
           </div>
         </div>

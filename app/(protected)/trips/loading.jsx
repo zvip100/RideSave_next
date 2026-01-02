@@ -1,8 +1,8 @@
 export default function TripsLoading() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-safe">
       {/* Content */}
-      <div className="max-w-[1400px] mx-auto px-6 py-8">
+      <div className="container-main py-8">
         {/* Page Header Skeleton */}
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -13,7 +13,7 @@ export default function TripsLoading() {
         </div>
 
         {/* Table Skeleton */}
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="card overflow-hidden">
           {/* Table Header */}
           <div className="border-b border-border px-6 py-4 flex gap-6">
             {["w-16", "w-40", "w-20", "w-24", "w-24", "w-32"].map(

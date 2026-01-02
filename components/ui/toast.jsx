@@ -53,7 +53,7 @@ export default function Toast({
         className
       )}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex-row gap-2">
         <div className="w-2 h-2 bg-primary-foreground rounded-full animate-pulse"></div>
         <span className="text-sm font-medium">{message}</span>
       </div>
