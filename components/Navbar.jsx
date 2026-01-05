@@ -59,6 +59,7 @@ export default function Navbar() {
         {/* Mobile Nav */}
         <MobileNav
           session={session}
+          pathname={pathname}
           isOpen={menuOpen}
           onClose={() => setMenuOpen(false)}
           onSignOut={handleSignOut}

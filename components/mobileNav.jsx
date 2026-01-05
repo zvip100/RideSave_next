@@ -5,7 +5,25 @@ import { LogOut as LogOutIcon } from "lucide-react";
 import SendWeeklyEmail from "@/components/sendWeeklyEmail";
 import { cn } from "@/lib/utils";
 
-export default function MobileNav({ session, isOpen, onClose, onSignOut }) {
+function NavLink({ href, onClick, children }) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="block py-3 text-lg text-secondary-foreground hover:text-foreground"
+    >
+      {children}
+    </Link>
+  );
+}
+
+export default function MobileNav({
+  session,
+  pathname,
+  isOpen,
+  onClose,
+  onSignOut,
+}) {
   if (!isOpen) return null;
 
   return (
@@ -35,6 +53,12 @@ export default function MobileNav({ session, isOpen, onClose, onSignOut }) {
               </div>
             </div>
 
+            {pathname !== "/trips" && (
+              <NavLink href="/trips" onClick={onClose}>
+                Trips
+              </NavLink>
+            )}
+
             {/* Action Buttons */}
             <div className="flex justify-between gap-3 pt-4">
               <SendWeeklyEmail user={session.user} />
@@ -52,13 +76,9 @@ export default function MobileNav({ session, isOpen, onClose, onSignOut }) {
             </div>
           </>
         ) : (
-          <Link
-            href="/login"
-            onClick={onClose}
-            className="block py-3 text-lg text-secondary-foreground hover:text-foreground"
-          >
+          <NavLink href="/login" onClick={onClose}>
             Login
-          </Link>
+          </NavLink>
         )}
       </div>
     </>

@@ -5,22 +5,30 @@ import { LogOut as LogOutIcon } from "lucide-react";
 import SendWeeklyEmail from "@/components/sendWeeklyEmail";
 import { cn } from "@/lib/utils";
 
+function NavLink({ href, pathname, children }) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "text-lg transition-colors",
+        pathname === href
+          ? "text-primary opacity-60"
+          : "text-secondary-foreground hover:text-foreground"
+      )}
+    >
+      {children}
+    </Link>
+  );
+}
+
 export default function DesktopNav({ session, pathname, onSignOut }) {
   return (
     <nav className="hidden md:flex items-center gap-8">
       {session ? (
         <>
-          <Link
-            href="/trips"
-            className={cn(
-              "text-lg transition-colors",
-              pathname === "/trips"
-                ? "text-primary opacity-60"
-                : "text-secondary-foreground hover:text-foreground"
-            )}
-          >
+          <NavLink href="/trips" pathname={pathname}>
             Trips
-          </Link>
+          </NavLink>
 
           {pathname === "/trips" && <SendWeeklyEmail user={session.user} />}
 
@@ -66,12 +74,9 @@ export default function DesktopNav({ session, pathname, onSignOut }) {
           </div>
         </>
       ) : (
-        <Link
-          href="/login"
-          className="text-lg text-secondary-foreground hover:text-foreground transition-colors"
-        >
+        <NavLink href="/login" pathname={pathname}>
           Login
-        </Link>
+        </NavLink>
       )}
     </nav>
   );
