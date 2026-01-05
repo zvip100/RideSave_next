@@ -26,7 +26,7 @@ export default function SendWeeklyEmail({ user: { name, unit } }) {
   return (
     <Button
       size="sm"
-      className={cn("gap-2 ml-4 min-w-[155px]", {
+      className={cn("gap-2 min-w-[155px]", {
         "cursor-not-allowed": isLoading,
       })}
       onClick={handleClick}
