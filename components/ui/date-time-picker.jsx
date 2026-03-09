@@ -32,24 +32,30 @@ const formatESTDateTime = (date) => {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
-export function DateTimePicker({ value, onChange, className, ...props }) {
+export function DateTimePicker({
+  value,
+  onChange,
+  className,
+  requireTime = true,
+  ...props
+}) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   // Get EST/EDT time for defaults
   const getESTDate = () => {
     const now = new Date();
     return new Date(
-      now.toLocaleString("en-US", { timeZone: "America/New_York" })
+      now.toLocaleString("en-US", { timeZone: "America/New_York" }),
     );
   };
 
   const estNow = getESTDate();
 
   const [selectedDate, setSelectedDate] = React.useState(
-    value ? new Date(value) : estNow
+    value ? new Date(value) : estNow,
   );
   const [viewDate, setViewDate] = React.useState(
-    value ? new Date(value) : estNow
+    value ? new Date(value) : estNow,
   );
   const [time, setTime] = React.useState(() => {
     if (value) return new Date(value).toTimeString().slice(0, 5);
@@ -82,6 +88,14 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
   };
 
   const formatDisplayDate = () => {
+    if (!requireTime) {
+      if (!selectedDate) return "Select Date";
+      return selectedDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
     if (!selectedDate || !time) return "Select Time";
     const date = new Date(selectedDate);
     const [hours, minutes] = time.split(":");
@@ -100,7 +114,7 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
     const checkDate = new Date(
       viewDate.getFullYear(),
       viewDate.getMonth(),
-      day
+      day,
     );
     const today = getESTDate();
     today.setHours(0, 0, 0, 0);
@@ -117,6 +131,22 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
 
   const handleDateSelect = (day) => {
     const newDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
+
+    if (!requireTime) {
+      newDate.setHours(0, 0, 0, 0);
+      const estNow = getESTDate();
+      estNow.setHours(0, 0, 0, 0);
+      if (newDate > estNow) {
+        setSelectedDate(estNow);
+        const estString = formatESTDateTime(estNow).split("T")[0];
+        onChange?.(estString);
+        return;
+      }
+      setSelectedDate(newDate);
+      const estString = formatESTDateTime(newDate).split("T")[0];
+      onChange?.(estString);
+      return;
+    }
 
     // If time is set, use it; otherwise set to noon
     if (time) {
@@ -235,7 +265,7 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
       const dayDate = new Date(
         viewDate.getFullYear(),
         viewDate.getMonth(),
-        day
+        day,
       );
       const isFuture =
         dayDate >
@@ -253,11 +283,11 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
             isSelected && "bg-primary text-primary-foreground hover:bg-primary",
             !isSelected && isToday && "border border-primary",
             isFuture && "opacity-30 cursor-not-allowed",
-            "flex-center"
+            "flex-center",
           )}
         >
           {day}
-        </button>
+        </button>,
       );
     }
 
@@ -273,7 +303,9 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
           "flex h-10 w-full rounded-md border border-border bg-card px-3 py-2 text-sm",
           "hover:bg-secondary transition-colors text-left",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
-          !time ? "text-muted-foreground" : "text-foreground"
+          (!requireTime ? !selectedDate : !time)
+            ? "text-muted-foreground"
+            : "text-foreground",
         )}
       >
         <span className="flex-row gap-2">
@@ -368,122 +400,139 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
             </div>
 
             {/* Time Picker */}
-            <div className="border-t border-border pt-4">
-              <div className="flex items-center justify-between mb-3">
-                <Label className="text-xs">Time</Label>
-                <button
-                  type="button"
-                  onClick={() => setShowTimePicker(!showTimePicker)}
-                  className="text-xs text-primary hover:underline"
-                >
-                  {showTimePicker ? "Hide" : "Show"} Picker
-                </button>
-              </div>
-
-              {showTimePicker ? (
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Hours (12-hour format with AM/PM) */}
-                  <div>
-                    <Label className="text-xs mb-2 block text-muted-foreground">
-                      Hour
-                    </Label>
-                    <div className="h-40 overflow-y-auto border border-border rounded-md custom-scrollbar">
-                      {Array.from({ length: 24 }, (_, i) => i).map((hour24) => {
-                        const [currentHour] = time.split(":");
-                        const currentHour24 = parseInt(currentHour);
-                        const isSelected = currentHour24 === hour24;
-
-                        // Convert to 12-hour format
-                        const displayHour = hour24 % 12 || 12;
-                        const period = hour24 < 12 ? "AM" : "PM";
-
-                        // Check if this hour would create a future time
-                        const testDate = new Date(selectedDate);
-                        testDate.setHours(hour24);
-                        const estNow = getESTDate();
-                        const isFuture =
-                          testDate > estNow &&
-                          selectedDate.toDateString() === estNow.toDateString();
-
-                        return (
-                          <button
-                            key={hour24}
-                            type="button"
-                            onClick={() => {
-                              if (!isFuture) {
-                                const [, mins] = time.split(":");
-                                handleTimeChange(hour24, parseInt(mins) || 0);
-                              }
-                            }}
-                            disabled={isFuture}
-                            className={cn(
-                              "w-full px-3 py-1.5 text-sm text-left transition-colors",
-                              isSelected &&
-                                "bg-primary text-primary-foreground",
-                              !isSelected && !isFuture && "hover:bg-secondary",
-                              isFuture && "opacity-30 cursor-not-allowed"
-                            )}
-                          >
-                            {displayHour}:00 {period}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Minutes (every minute 0-59) */}
-                  <div>
-                    <Label className="text-xs mb-2 block text-muted-foreground">
-                      Minute
-                    </Label>
-                    <div className="h-40 overflow-y-auto border border-border rounded-md custom-scrollbar">
-                      {Array.from({ length: 60 }, (_, i) => i).map((minute) => {
-                        const [currentHour, currentMin] = time.split(":");
-                        const isSelected = parseInt(currentMin) === minute;
-
-                        // Check if this minute would create a future time
-                        const testDate = new Date(selectedDate);
-                        testDate.setHours(parseInt(currentHour), minute);
-                        const estNow = getESTDate();
-                        const isFuture = testDate > estNow;
-
-                        return (
-                          <button
-                            key={minute}
-                            type="button"
-                            onClick={() => {
-                              if (!isFuture) {
-                                handleTimeChange(parseInt(currentHour), minute);
-                              }
-                            }}
-                            disabled={isFuture}
-                            className={cn(
-                              "w-full px-3 py-1.5 text-sm text-left transition-colors",
-                              isSelected &&
-                                "bg-primary text-primary-foreground",
-                              !isSelected && !isFuture && "hover:bg-secondary",
-                              isFuture && "opacity-30 cursor-not-allowed"
-                            )}
-                          >
-                            :{minute.toString().padStart(2, "0")}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
+            {requireTime && (
+              <div className="border-t border-border pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <Label className="text-xs">Time</Label>
+                  <button
+                    type="button"
+                    onClick={() => setShowTimePicker(!showTimePicker)}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    {showTimePicker ? "Hide" : "Show"} Picker
+                  </button>
                 </div>
-              ) : (
-                <Input
-                  ref={timeInputRef}
-                  type="time"
-                  value={time}
-                  onChange={handleManualTimeChange}
-                  onBlur={handleManualTimeBlur}
-                  placeholder="Choose time"
-                  className="w-full"
-                />
-              )}
-            </div>
+
+                {showTimePicker ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Hours (12-hour format with AM/PM) */}
+                    <div>
+                      <Label className="text-xs mb-2 block text-muted-foreground">
+                        Hour
+                      </Label>
+                      <div className="h-40 overflow-y-auto border border-border rounded-md custom-scrollbar">
+                        {Array.from({ length: 24 }, (_, i) => i).map(
+                          (hour24) => {
+                            const [currentHour] = time.split(":");
+                            const currentHour24 = parseInt(currentHour);
+                            const isSelected = currentHour24 === hour24;
+
+                            // Convert to 12-hour format
+                            const displayHour = hour24 % 12 || 12;
+                            const period = hour24 < 12 ? "AM" : "PM";
+
+                            // Check if this hour would create a future time
+                            const testDate = new Date(selectedDate);
+                            testDate.setHours(hour24);
+                            const estNow = getESTDate();
+                            const isFuture =
+                              testDate > estNow &&
+                              selectedDate.toDateString() ===
+                                estNow.toDateString();
+
+                            return (
+                              <button
+                                key={hour24}
+                                type="button"
+                                onClick={() => {
+                                  if (!isFuture) {
+                                    const [, mins] = time.split(":");
+                                    handleTimeChange(
+                                      hour24,
+                                      parseInt(mins) || 0,
+                                    );
+                                  }
+                                }}
+                                disabled={isFuture}
+                                className={cn(
+                                  "w-full px-3 py-1.5 text-sm text-left transition-colors",
+                                  isSelected &&
+                                    "bg-primary text-primary-foreground",
+                                  !isSelected &&
+                                    !isFuture &&
+                                    "hover:bg-secondary",
+                                  isFuture && "opacity-30 cursor-not-allowed",
+                                )}
+                              >
+                                {displayHour}:00 {period}
+                              </button>
+                            );
+                          },
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Minutes (every minute 0-59) */}
+                    <div>
+                      <Label className="text-xs mb-2 block text-muted-foreground">
+                        Minute
+                      </Label>
+                      <div className="h-40 overflow-y-auto border border-border rounded-md custom-scrollbar">
+                        {Array.from({ length: 60 }, (_, i) => i).map(
+                          (minute) => {
+                            const [currentHour, currentMin] = time.split(":");
+                            const isSelected = parseInt(currentMin) === minute;
+
+                            // Check if this minute would create a future time
+                            const testDate = new Date(selectedDate);
+                            testDate.setHours(parseInt(currentHour), minute);
+                            const estNow = getESTDate();
+                            const isFuture = testDate > estNow;
+
+                            return (
+                              <button
+                                key={minute}
+                                type="button"
+                                onClick={() => {
+                                  if (!isFuture) {
+                                    handleTimeChange(
+                                      parseInt(currentHour),
+                                      minute,
+                                    );
+                                  }
+                                }}
+                                disabled={isFuture}
+                                className={cn(
+                                  "w-full px-3 py-1.5 text-sm text-left transition-colors",
+                                  isSelected &&
+                                    "bg-primary text-primary-foreground",
+                                  !isSelected &&
+                                    !isFuture &&
+                                    "hover:bg-secondary",
+                                  isFuture && "opacity-30 cursor-not-allowed",
+                                )}
+                              >
+                                :{minute.toString().padStart(2, "0")}
+                              </button>
+                            );
+                          },
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <Input
+                    ref={timeInputRef}
+                    type="time"
+                    value={time}
+                    onChange={handleManualTimeChange}
+                    onBlur={handleManualTimeBlur}
+                    placeholder="Choose time"
+                    className="w-full"
+                  />
+                )}
+              </div>
+            )}
 
             {/* Quick Actions */}
             <div className="flex gap-2 mt-4">
@@ -493,14 +542,19 @@ export function DateTimePicker({ value, onChange, className, ...props }) {
                   const estNow = getESTDate();
                   setSelectedDate(estNow);
                   setViewDate(estNow);
-                  setTime(estNow.toTimeString().slice(0, 5));
-                  const estString = formatESTDateTime(estNow);
-                  onChange?.(estString);
+                  if (requireTime) {
+                    setTime(estNow.toTimeString().slice(0, 5));
+                    const estString = formatESTDateTime(estNow);
+                    onChange?.(estString);
+                  } else {
+                    const estString = formatESTDateTime(estNow).split("T")[0];
+                    onChange?.(estString);
+                  }
                   setShowTimePicker(false);
                 }}
                 className="flex-1 h-8 text-xs rounded-md border border-border hover:bg-secondary transition-colors"
               >
-                Now (EST)
+                {requireTime ? "Now (EST)" : "Today (EST)"}
               </button>
               <button
                 type="button"
