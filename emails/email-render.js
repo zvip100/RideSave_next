@@ -1,4 +1,4 @@
-import { render, toPlainText } from '@react-email/render';
+import { render, toPlainText } from "@react-email/render";
 
 /**
  * Render the Weekly Trips Report email to HTML
@@ -19,7 +19,7 @@ export async function renderWeeklyTripsEmail(data) {
 
   try {
     // Dynamically import the React component
-    const WeeklyTripsReportModule = await import('./WeeklyTripsReport.jsx');
+    const WeeklyTripsReportModule = await import("./WeeklyTripsReport.jsx");
 
     const WeeklyTripsReport = WeeklyTripsReportModule.default;
 
@@ -31,31 +31,31 @@ export async function renderWeeklyTripsEmail(data) {
         weekEnd,
         trips,
         totalTrips,
-      })
+      }),
     );
 
     const textEmail = toPlainText(html);
-    console.log('✅ Email rendered successfully using @react-email/render');
+    console.log("✅ Email rendered successfully using @react-email/render");
 
     return { html, textEmail };
   } catch (error) {
-    console.error('❌ Error rendering email template:', error.message);
+    console.error("❌ Error rendering email template:", error.message);
 
     // Fallback to simple text-based HTML email if rendering fails
-    const medicaidTrips = trips.filter(t => t.type === 'Medicaid').length;
-    const cashTrips = trips.filter(t => t.type === 'Cash').length;
+    const medicaidTrips = trips.filter((t) => t.type === "Medicaid").length;
+    const cashTrips = trips.filter((t) => t.type === "Cash").length;
 
     // Helper to format trip details
-    const formatTripDetails = trip => {
+    const formatTripDetails = (trip) => {
       const date = new Date(trip.time);
-      const dateStr = date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
+      const dateStr = date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
       });
-      const timeStr = date.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
+      const timeStr = date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
         hour12: true,
       });
 
@@ -134,19 +134,19 @@ export async function renderWeeklyTripsEmail(data) {
                 : trips
                     .map(
                       (trip, index) => `
-                <div style="background: ${index % 2 === 0 ? '#ffffff' : '#f9fafb'}; padding: 15px; margin-bottom: 15px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                <div style="background: ${index % 2 === 0 ? "#ffffff" : "#f9fafb"}; padding: 15px; margin-bottom: 15px; border: 1px solid #e5e7eb; border-radius: 4px;">
                   <div style="font-weight: bold; color: #2563eb; margin-bottom: 8px;">Trip #${index + 1}</div>
                   <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word;">${formatTripDetails(trip)}</pre>
                 </div>
-              `
+              `,
                     )
-                    .join('')
+                    .join("")
             }
 
             <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
               <p style="margin: 0; color: #9ca3af; font-size: 12px;">
                 This is an automated weekly report from RideSave<br>
-                © 2025 RideSave. All rights reserved.
+                © 2026 RideSave. All rights reserved.
               </p>
             </div>
 
@@ -156,5 +156,3 @@ export async function renderWeeklyTripsEmail(data) {
     `;
   }
 }
-
-

@@ -88,7 +88,7 @@ export default function Home() {
       <footer className="py-8 border-t border-border">
         <div className="w-full max-w-[1200px] mx-auto px-6 text-center">
           <p className="text-muted-foreground text-sm">
-            © 2025 RideSave. All rights reserved.
+            © 2026 RideSave. All rights reserved.
           </p>
         </div>
       </footer>

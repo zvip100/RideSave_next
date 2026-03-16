@@ -238,7 +238,7 @@ const WeeklyTripsReport = ({
             </Text>
 
             <Text style={footerCopyright}>
-              © 2025 RideSave. All rights reserved.
+              © 2026 RideSave. All rights reserved.
             </Text>
           </Section>
         </Container>
