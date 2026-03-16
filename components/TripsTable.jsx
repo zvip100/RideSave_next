@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Banknote,
   CreditCard,
@@ -12,15 +11,6 @@ import {
 import TripActions from "./TripActions";
 
 export default function TripsTable({ trips }) {
-  const [openModalTripId, setOpenModalTripId] = useState(null);
-
-  const handleRowDoubleClick = (tripId) => {
-    setOpenModalTripId(tripId);
-  };
-
-  const handleModalClose = () => {
-    setOpenModalTripId(null);
-  };
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-US", {
       month: "short",
@@ -84,8 +74,7 @@ export default function TripsTable({ trips }) {
               trips.map((trip) => (
                 <tr
                   key={trip.id}
-                  className="group hover:bg-secondary/50 transition-colors cursor-pointer"
-                  onDoubleClick={() => handleRowDoubleClick(trip.id)}
+                  className="group hover:bg-secondary/50 transition-colors"
                 >
                   {/* Date & Time */}
                   <td className="px-6 py-4">
@@ -240,12 +229,7 @@ export default function TripsTable({ trips }) {
 
                   {/* Actions */}
                   <td className="px-6 py-4">
-                    <TripActions
-                      tripId={trip.id}
-                      fieldValues={trip}
-                      externalIsOpen={openModalTripId === trip.id}
-                      onOpenChange={handleModalClose}
-                    />
+                    <TripActions tripId={trip.id} fieldValues={trip} />
                   </td>
                 </tr>
               ))
