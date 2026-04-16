@@ -92,7 +92,14 @@ export default function SendWeeklyEmail({ user: { name, unit } }) {
 
       {/* Date range popover */}
       {showDatePicker && (
-        <div className="absolute right-0 top-full mt-2 z-50 card rounded-lg shadow-xl shadow-black/30 p-4 w-[280px] space-y-3">
+        <div
+          className={cn(
+            "z-[60] card rounded-lg shadow-xl shadow-black/30 p-4 space-y-3",
+            "w-[min(280px,calc(100vw-2rem))] md:w-[280px]",
+            "max-md:fixed max-md:left-1/2 max-md:top-1/2 max-md:-translate-x-1/2 max-md:-translate-y-1/2",
+            "md:absolute md:left-1/2 md:top-full md:mt-2 md:-translate-x-1/2",
+          )}
+        >
           <p className="text-sm font-medium">Custom Date Range</p>
 
           <div className="space-y-1.5">
@@ -108,7 +115,7 @@ export default function SendWeeklyEmail({ user: { name, unit } }) {
           <div className="space-y-1.5">
             <Label htmlFor="report-end">End Date</Label>
             <DateTimePicker
-              value={startDate}
+              value={endDate}
               onChange={setEndDate}
               className="w-full"
               requireTime={false}
